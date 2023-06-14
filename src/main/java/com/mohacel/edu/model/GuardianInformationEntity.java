@@ -1,10 +1,7 @@
 package com.mohacel.edu.model;
 
 import com.mohacel.edu.dto.GuardianAddress;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -18,6 +15,8 @@ public class GuardianInformationEntity {
     private String relationshipToStudent;
     private String guardianEmailAddress;
     private String guardianContact;
-    private GuardianAddress guardianAddress;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "guardianAddressId")
+    private GuardianAddressEntity guardianAddress;
     private String authorizedPickup;
 }
