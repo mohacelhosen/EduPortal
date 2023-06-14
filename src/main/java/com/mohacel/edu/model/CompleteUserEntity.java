@@ -1,11 +1,21 @@
-package com.mohacel.edu.dto;
+package com.mohacel.edu.model;
 
+import com.mohacel.edu.dto.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 @Data
-public class CompleteUserDto {
-    // we need all the information regrading to admission
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "USER_INFO")
+public class CompleteUserEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String userId;
     private String fullName;
     private String email;
