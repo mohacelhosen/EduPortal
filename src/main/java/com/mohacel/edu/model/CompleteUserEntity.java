@@ -1,6 +1,7 @@
 package com.mohacel.edu.model;
 
 import com.mohacel.edu.dto.*;
+import com.mohacel.edu.model.UserAddressEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,10 +29,14 @@ public class CompleteUserEntity {
     private String userNationality;
     private String academicInterests;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_address_id")
+    @JoinColumn(name = "userAddressId")
     private UserAddressEntity userAddress;
-    private Extracurricular extracurricular;
-    private EmergencyContact emergencyContact;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userCurricularId")
+    private ExtracurricularEntity extracurricular;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userEmergencyContactId")
+    private EmergencyContactEntity emergencyContact;
     private GuardianInformation guardianInformation;
     private MedicalInformation medicalInformation;
     private MedicalEmergencyContact medicalEmergencyContact;
