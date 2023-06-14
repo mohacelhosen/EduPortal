@@ -20,5 +20,5 @@ public class GuardianInformationEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "guardianAddressId")
     private GuardianAddressEntity guardianAddress;
-    private String authorizedPickup;
+    private String authorizedPickup;//this is formation need to updated
 }
