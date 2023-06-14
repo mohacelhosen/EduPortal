@@ -27,7 +27,9 @@ public class CompleteUserEntity {
     private String userContactNumber;
     private String userNationality;
     private String academicInterests;
-    private UserAddress userAddress;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_address_id")
+    private UserAddressEntity userAddress;
     private Extracurricular extracurricular;
     private EmergencyContact emergencyContact;
     private GuardianInformation guardianInformation;
