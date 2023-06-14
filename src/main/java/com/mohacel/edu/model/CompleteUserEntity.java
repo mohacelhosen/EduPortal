@@ -37,7 +37,11 @@ public class CompleteUserEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userEmergencyContactId")
     private EmergencyContactEntity emergencyContact;
-    private GuardianInformation guardianInformation;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "guardianInformationId")
+    private GuardianInformationEntity guardianInformation;
     private MedicalInformation medicalInformation;
-    private MedicalEmergencyContact medicalEmergencyContact;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "medicalContactId")
+    private MedicalEmergencyContactEntity medicalEmergencyContact;
 }
