@@ -9,7 +9,6 @@ public class CompleteUserDto {
     private String userId;
     private String fullName;
     private String email;
-    private String password;
     private LocalDate dob;
     private String gender;
     private Double height;
