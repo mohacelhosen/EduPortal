@@ -1,7 +1,8 @@
 package com.mohacel.edu.service;
 
 import com.mohacel.edu.dto.CompleteUserDto;
-import com.mohacel.edu.model.CompleteUserEntity;
+import com.mohacel.edu.dto.GuardianAddress;
+import com.mohacel.edu.model.*;
 import com.mohacel.edu.repository.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -42,11 +43,39 @@ public class UserServiceImpl implements IUserService{
     @Override
     public boolean registerUser(CompleteUserDto completeUserDto) {
         CompleteUserEntity completeUser = new CompleteUserEntity();
+        UserAddressEntity userAddress = new UserAddressEntity();
+        EmergencyContactEntity emergencyContact = new EmergencyContactEntity();
+        ExtracurricularEntity extracurricular = new ExtracurricularEntity();
+        GuardianAddressEntity guardianAddress = new GuardianAddressEntity();
+        GuardianInformationEntity guardianInformation = new GuardianInformationEntity();
+        MedicalInformationEntity medicalInformation = new MedicalInformationEntity();
+        MedicalEmergencyContactEntity medicalEmergencyContact = new MedicalEmergencyContactEntity();
         String password = generateRandomString(8);
         completeUser.setPassword(password);
         try{
             BeanUtils.copyProperties(completeUserDto, completeUser);
-            return true;
+            BeanUtils.copyProperties(completeUserDto,userAddress);
+            BeanUtils.copyProperties(completeUserDto, emergencyContact);
+            BeanUtils.copyProperties(completeUserDto, extracurricular);
+            BeanUtils.copyProperties(completeUserDto, guardianAddress);
+            BeanUtils.copyProperties(completeUserDto, guardianInformation);
+            BeanUtils.copyProperties(completeUserDto,medicalInformation);
+            BeanUtils.copyProperties(completeUserDto,medicalEmergencyContact);
+
+
+            Integer id = completeUserRepository.save(completeUser).getId();
+            userAddressRepository.save(userAddress);
+            guardianAddressRepository.save(guardianAddress);
+            guardianInformationRepository.save(guardianInformation);
+            emergencyContactRepository.save(emergencyContact);
+            extraCurricularRepository.save(extracurricular);
+            medicalInformationRepository.save(medicalInformation);
+            medicalEmergencyContactRepository.save(medicalEmergencyContact);
+            if(id!=null){
+                return true;
+            }else {
+                return false;
+            }
         }catch (Exception e){
             return false;
         }
