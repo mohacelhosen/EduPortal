@@ -27,7 +27,7 @@ public class UserRestController {
         if (isSaved){
             return new ResponseEntity<>("Save successfully..✅", HttpStatus.OK);
         }else{
-            return new ResponseEntity<>("Fail to Register❌", HttpStatus.OK);
+            return new ResponseEntity<>("Fail to Register❌", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

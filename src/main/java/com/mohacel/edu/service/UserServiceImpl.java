@@ -2,10 +2,12 @@ package com.mohacel.edu.service;
 
 import com.mohacel.edu.dto.CompleteUserDto;
 import com.mohacel.edu.dto.GuardianAddress;
+import com.mohacel.edu.exception.RegistrationFailException;
 import com.mohacel.edu.model.*;
 import com.mohacel.edu.repository.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Random;
@@ -41,6 +43,7 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
+    @Transactional
     public boolean registerUser(CompleteUserDto completeUserDto) {
         CompleteUserEntity completeUser = new CompleteUserEntity();
         UserAddressEntity userAddress = new UserAddressEntity();
@@ -54,16 +57,35 @@ public class UserServiceImpl implements IUserService{
         completeUser.setPassword(password);
         try{
             BeanUtils.copyProperties(completeUserDto, completeUser);
-            BeanUtils.copyProperties(completeUserDto,userAddress);
-            BeanUtils.copyProperties(completeUserDto, emergencyContact);
-            BeanUtils.copyProperties(completeUserDto, extracurricular);
-            BeanUtils.copyProperties(completeUserDto, guardianAddress);
-            BeanUtils.copyProperties(completeUserDto, guardianInformation);
-            BeanUtils.copyProperties(completeUserDto,medicalInformation);
-            BeanUtils.copyProperties(completeUserDto,medicalEmergencyContact);
+            BeanUtils.copyProperties(completeUserDto.getUserAddress(),userAddress);
+            System.out.println(userAddress);
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
+
+            BeanUtils.copyProperties(completeUserDto.getEmergencyContact(), emergencyContact);
+            System.out.println(emergencyContact);
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
+
+            BeanUtils.copyProperties(completeUserDto.getExtracurricular(), extracurricular);
+            System.out.println(extracurricular);
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
+
+            BeanUtils.copyProperties(completeUserDto.getGuardianInformation().getGuardianAddress(), guardianAddress);
+            System.out.println(guardianAddress);
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
+
+            BeanUtils.copyProperties(completeUserDto.getGuardianInformation(), guardianInformation);
+            System.out.println(guardianInformation);
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
+
+            BeanUtils.copyProperties(completeUserDto.getMedicalInformation(),medicalInformation);
+            System.out.println(medicalInformation);
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
+
+            BeanUtils.copyProperties(completeUserDto.getMedicalEmergencyContact(),medicalEmergencyContact);
+            System.out.println(medicalEmergencyContact);
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
 
 
-            Integer id = completeUserRepository.save(completeUser).getId();
             userAddressRepository.save(userAddress);
             guardianAddressRepository.save(guardianAddress);
             guardianInformationRepository.save(guardianInformation);
@@ -71,13 +93,14 @@ public class UserServiceImpl implements IUserService{
             extraCurricularRepository.save(extracurricular);
             medicalInformationRepository.save(medicalInformation);
             medicalEmergencyContactRepository.save(medicalEmergencyContact);
+            Integer id = completeUserRepository.save(completeUser).getId();
             if(id!=null){
                 return true;
             }else {
                 return false;
             }
         }catch (Exception e){
-            return false;
+            throw new RegistrationFailException(e.getMessage());
         }
     }
 
