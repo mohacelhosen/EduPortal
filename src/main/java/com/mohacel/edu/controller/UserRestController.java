@@ -5,10 +5,7 @@ import com.mohacel.edu.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserRestController {
@@ -29,5 +26,11 @@ public class UserRestController {
         }else{
             return new ResponseEntity<>("Fail to Register❌", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<CompleteUserDto> getUserInfoById(@PathVariable Integer userId){
+        CompleteUserDto userById = userService.findUserById(userId);
+        return new ResponseEntity<>(userById, HttpStatus.OK);
     }
 }

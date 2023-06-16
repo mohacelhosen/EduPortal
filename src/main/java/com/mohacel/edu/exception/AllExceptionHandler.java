@@ -21,5 +21,15 @@ public class AllExceptionHandler {
         return  new ResponseEntity<>(exceptionInfo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(value = UserIdNotFoundException.class)
+    public ResponseEntity<ExceptionInfo> handleIdNotFoundException(UserIdNotFoundException uinfe){
+        String message = uinfe.getMessage();
+        ExceptionInfo exceptionInfo = new ExceptionInfo();
+        exceptionInfo.setExceptionCode("InValid-101");
+        exceptionInfo.setExceptionMessage(message);
+        exceptionInfo.setTimeStamp(LocalDate.now());
+
+        return  new ResponseEntity<>(exceptionInfo, HttpStatus.BAD_REQUEST);
+    }
 
 }

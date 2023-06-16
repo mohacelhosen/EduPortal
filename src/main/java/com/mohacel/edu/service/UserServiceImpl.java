@@ -111,6 +111,7 @@ public class UserServiceImpl implements IUserService{
         CompleteUserDto completeUserDto = new CompleteUserDto();
         Optional<CompleteUserEntity> completeUserInfoById = completeUserRepository.findById(userId);
         if (completeUserInfoById.isPresent()){
+            BeanUtils.copyProperties(completeUserInfoById,completeUserDto);
             return completeUserDto;
         }else{
          throw new UserIdNotFoundException("Invalid Id");
