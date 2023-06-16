@@ -20,4 +20,6 @@ public class AllExceptionHandler {
 
         return  new ResponseEntity<>(exceptionInfo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
 }

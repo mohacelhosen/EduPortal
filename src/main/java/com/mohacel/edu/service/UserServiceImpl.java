@@ -3,6 +3,7 @@ package com.mohacel.edu.service;
 import com.mohacel.edu.dto.CompleteUserDto;
 import com.mohacel.edu.dto.GuardianAddress;
 import com.mohacel.edu.exception.RegistrationFailException;
+import com.mohacel.edu.exception.UserIdNotFoundException;
 import com.mohacel.edu.model.*;
 import com.mohacel.edu.repository.*;
 import org.springframework.beans.BeanUtils;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -106,7 +108,13 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public CompleteUserDto findUserById(Integer userId) {
-        return null;
+        CompleteUserDto completeUserDto = new CompleteUserDto();
+        Optional<CompleteUserEntity> completeUserInfoById = completeUserRepository.findById(userId);
+        if (completeUserInfoById.isPresent()){
+            return completeUserDto;
+        }else{
+         throw new UserIdNotFoundException("Invalid Id");
+        }
     }
 
     @Override
