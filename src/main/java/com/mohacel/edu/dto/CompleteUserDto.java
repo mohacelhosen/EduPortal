@@ -22,4 +22,5 @@ public class CompleteUserDto {
     private GuardianInformation guardianInformation;
     private MedicalInformation medicalInformation;
     private MedicalEmergencyContact medicalEmergencyContact;
+
 }

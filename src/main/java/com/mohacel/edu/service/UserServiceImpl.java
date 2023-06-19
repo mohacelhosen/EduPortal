@@ -82,13 +82,13 @@ public class UserServiceImpl implements IUserService{
                     dtoMedicalEmergencyContact !=null){
 
                 //copy dto object to entity object with the
-                BeanUtils.copyProperties(dtoUserAddress,userAddress);
-                BeanUtils.copyProperties(dtoEmergencyContact, emergencyContact);
-                BeanUtils.copyProperties(dtoExtracurricular, extracurricular);
-                BeanUtils.copyProperties(dtoGuardianAddress, guardianAddress);
-                BeanUtils.copyProperties(dtoGuardianInformation, guardianInformation);
-                BeanUtils.copyProperties(dtoMedicalInformation,medicalInformation);
-                BeanUtils.copyProperties(dtoMedicalEmergencyContact,medicalEmergencyContact);
+                copyProperties(dtoUserAddress,userAddress);
+                copyProperties(dtoEmergencyContact, emergencyContact);
+                copyProperties(dtoExtracurricular, extracurricular);
+                copyProperties(dtoGuardianAddress, guardianAddress);
+                copyProperties(dtoGuardianInformation, guardianInformation);
+                copyProperties(dtoMedicalInformation,medicalInformation);
+                copyProperties(dtoMedicalEmergencyContact,medicalEmergencyContact);
 
 
                 // Set the relationship between CompleteUserEntity and UserEntity
@@ -113,9 +113,17 @@ public class UserServiceImpl implements IUserService{
                 completeUser.setMedicalInformation(medicalInformation);
                 completeUser.setMedicalEmergencyContact(medicalEmergencyContact);
 
-
-
             }
+
+            userAddressRepository.save(userAddress);
+            guardianAddressRepository.save(guardianAddress);
+            guardianInformationRepository.save(guardianInformation);
+            emergencyContactRepository.save(emergencyContact);
+            extraCurricularRepository.save(extracurricular);
+            medicalInformationRepository.save(medicalInformation);
+            medicalEmergencyContactRepository.save(medicalEmergencyContact);
+            Integer id = completeUserRepository.save(completeUser).getId();
+
 
 
             // print all the entity class data to verify whether they copy or not
@@ -141,19 +149,7 @@ public class UserServiceImpl implements IUserService{
             System.out.println("----------------------------------------------------------------------------------------------------------------");
 
 
-            userAddressRepository.save(userAddress);
-            guardianAddressRepository.save(guardianAddress);
-            guardianInformationRepository.save(guardianInformation);
-            emergencyContactRepository.save(emergencyContact);
-            extraCurricularRepository.save(extracurricular);
-            medicalInformationRepository.save(medicalInformation);
-            medicalEmergencyContactRepository.save(medicalEmergencyContact);
-            Integer id = completeUserRepository.save(completeUser).getId();
-            if(id!=null){
-                return true;
-            }else {
-                return false;
-            }
+            return id != null;
         }catch (Exception e){
             throw new RegistrationFailException(e.getMessage());
         }
@@ -161,59 +157,55 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public CompleteUserDto findUserById(Integer userId) {
-        // creating new object
-        CompleteUserDto completeUserDto = new CompleteUserDto();
-        UserAddress userAddress = new UserAddress();
-        GuardianAddress guardianAddress = new GuardianAddress();
-        GuardianInformation guardianInformation = new GuardianInformation();
-        Extracurricular extracurricular = new Extracurricular();
-        MedicalInformation medicalInformation = new MedicalInformation();
-        MedicalEmergencyContact medicalEmergencyContact = new MedicalEmergencyContact();
-        EmergencyContact emergencyContact = new EmergencyContact();
-
         Optional<CompleteUserEntity> completeUserInfoById = completeUserRepository.findById(userId);
-        System.out.println("----------------------------------------------------------------------");
-        System.out.println(completeUserInfoById);
-        if (completeUserInfoById.isPresent()){
-            //copy to new object
-            BeanUtils.copyProperties(completeUserInfoById.get().getUserAddress(), userAddress);
-            BeanUtils.copyProperties(completeUserInfoById.get().getGuardianInformation(), guardianInformation);
-            BeanUtils.copyProperties(completeUserInfoById.get().getGuardianInformation().getGuardianAddress(), guardianAddress);
-            BeanUtils.copyProperties(completeUserInfoById.get().getExtracurricular(), extracurricular);
-            BeanUtils.copyProperties(completeUserInfoById.get().getMedicalInformation(), medicalInformation);
-            BeanUtils.copyProperties(completeUserInfoById.get().getMedicalEmergencyContact(), medicalEmergencyContact);
-            BeanUtils.copyProperties(completeUserInfoById.get().getEmergencyContact(), emergencyContact);
+        if (completeUserInfoById.isPresent()) {
+            CompleteUserEntity completeUser = completeUserInfoById.get();
+            CompleteUserDto completeUserDto = new CompleteUserDto();
+
+            UserAddress userAddress = new UserAddress();
+            copyProperties(completeUser.getUserAddress(), userAddress);
+
+            Extracurricular extracurricular = new Extracurricular();
+            copyProperties(completeUser.getExtracurricular(),extracurricular);
+
+            EmergencyContact emergencyContact = new EmergencyContact();
+            copyProperties(completeUser.getEmergencyContact(), emergencyContact);
+
+            GuardianAddress guardianAddress = new GuardianAddress();
+            GuardianInformation guardianInformation = new GuardianInformation();
+            copyProperties(completeUser.getGuardianInformation().getGuardianAddress(),guardianAddress);
+            copyProperties(completeUser.getGuardianInformation(), guardianInformation);
             guardianInformation.setGuardianAddress(guardianAddress);
 
-            //set to the DTO class
-            completeUserDto.setUserId(completeUserInfoById.get().getUserId());
-            completeUserDto.setFullName(completeUserInfoById.get().getFullName());
-            completeUserDto.setEmail(completeUserInfoById.get().getEmail());
-            completeUserDto.setDob(completeUserInfoById.get().getDob());
-            completeUserDto.setGender(completeUserInfoById.get().getGender());
-            completeUserDto.setHeight(completeUserInfoById.get().getHeight());
-            completeUserDto.setWeight(completeUserInfoById.get().getWeight());
-            completeUserDto.setUserContactNumber(completeUserInfoById.get().getUserContactNumber());
-            completeUserDto.setUserNationality(completeUserInfoById.get().getUserNationality());
-            completeUserDto.setAcademicInterests(completeUserInfoById.get().getAcademicInterests());
-            completeUserDto.setUserAddress(userAddress);
+            MedicalInformation medicalInformation = new MedicalInformation();
+            copyProperties(completeUser.getMedicalInformation(), medicalInformation);
+
+            MedicalEmergencyContact medicalEmergencyContact = new MedicalEmergencyContact();
+            copyProperties(completeUser.getMedicalEmergencyContact(), medicalEmergencyContact);
+
+
+            completeUserDto.setUserId(completeUser.getUserId());
+            completeUserDto.setFullName(completeUser.getFullName());
+            completeUserDto.setEmail(completeUser.getEmail());
+            completeUserDto.setDob(completeUser.getDob());
+            completeUserDto.setGender(completeUser.getGender());
+            completeUserDto.setHeight(completeUser.getHeight());
+            completeUserDto.setWeight(completeUser.getWeight());
+            completeUserDto.setUserContactNumber(completeUser.getUserContactNumber());
+            completeUserDto.setUserNationality(completeUser.getUserNationality());
+            completeUserDto.setAcademicInterests(completeUser.getAcademicInterests());
             completeUserDto.setExtracurricular(extracurricular);
             completeUserDto.setEmergencyContact(emergencyContact);
             completeUserDto.setGuardianInformation(guardianInformation);
             completeUserDto.setMedicalInformation(medicalInformation);
             completeUserDto.setMedicalEmergencyContact(medicalEmergencyContact);
 
-
-
-
-            System.out.println("----------------------------------------------------------------------");
-            System.out.println(completeUserDto);
-            System.out.println("----------------------------------------------------------------------");
             return completeUserDto;
-        }else{
-         throw new UserIdNotFoundException("Invalid Id");
+        } else {
+            throw new UserIdNotFoundException("Invalid Id");
         }
     }
+
 
     @Override
     public boolean deleteUserById(Integer userId) {
@@ -244,5 +236,9 @@ public class UserServiceImpl implements IUserService{
             sb.append(randomChar);
         }
         return sb.toString();
+    }
+
+    public static <S, T> void copyProperties(S source, T target) {
+        BeanUtils.copyProperties(source, target);
     }
 }
