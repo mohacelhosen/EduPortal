@@ -11,8 +11,6 @@ public class GuardianInformationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer guardianInformationId;
-    @OneToOne(mappedBy = "guardianInformation")
-    private CompleteUserEntity completeUser;
     private String guardianFullName;
     private String relationshipToStudent;
     private String guardianEmailAddress;

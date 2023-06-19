@@ -9,8 +9,6 @@ public class MedicalInformationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer medicalInformationId;
-    @OneToOne(mappedBy = "medicalInformation")
-    private CompleteUserEntity completeUser;
     private String bloodGroup;
     private String PreviousSurgeries;
     private boolean asthma;

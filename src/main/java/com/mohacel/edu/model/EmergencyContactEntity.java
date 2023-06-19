@@ -10,8 +10,6 @@ public class EmergencyContactEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userEmergencyContactId;
-    @OneToOne(mappedBy = "emergencyContact")
-    private CompleteUserEntity completeUser;
     private String fullName;
     private String relationship;
     private String contactNumber;

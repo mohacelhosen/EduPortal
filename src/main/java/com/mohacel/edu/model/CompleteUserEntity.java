@@ -46,4 +46,28 @@ public class CompleteUserEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "medicalContactId")
     private MedicalEmergencyContactEntity medicalEmergencyContact;
+
+    @Override
+    public String toString() {
+        return "CompleteUserEntity{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", dob=" + dob +
+                ", gender='" + gender + '\'' +
+                ", height=" + height +
+                ", weight=" + weight +
+                ", userContactNumber='" + userContactNumber + '\'' +
+                ", userNationality='" + userNationality + '\'' +
+                ", academicInterests='" + academicInterests + '\'' +
+                ", extracurricular=" + extracurricular +
+                ", emergencyContact=" + emergencyContact +
+                ", guardianInformation=" + guardianInformation +
+                ", medicalInformation=" + medicalInformation +
+                ", medicalEmergencyContact=" + medicalEmergencyContact +
+                '}';
+    }
+
 }
