@@ -158,64 +158,119 @@ public class UserServiceImpl implements IUserService{
     @Override
     public CompleteUserDto findUserById(Integer userId) {
         Optional<CompleteUserEntity> completeUserInfoById = completeUserRepository.findById(userId);
-        if (completeUserInfoById.isPresent()) {
-            CompleteUserEntity completeUser = completeUserInfoById.get();
-            CompleteUserDto completeUserDto = new CompleteUserDto();
+        try {
+            if (completeUserInfoById.isPresent()) {
+                CompleteUserEntity completeUser = completeUserInfoById.get();
+                CompleteUserDto completeUserDto = new CompleteUserDto();
 
-            UserAddress userAddress = new UserAddress();
-            copyProperties(completeUser.getUserAddress(), userAddress);
+                UserAddress userAddress = new UserAddress();
+                copyProperties(completeUser.getUserAddress(), userAddress);
 
-            Extracurricular extracurricular = new Extracurricular();
-            copyProperties(completeUser.getExtracurricular(),extracurricular);
+                Extracurricular extracurricular = new Extracurricular();
+                copyProperties(completeUser.getExtracurricular(), extracurricular);
 
-            EmergencyContact emergencyContact = new EmergencyContact();
-            copyProperties(completeUser.getEmergencyContact(), emergencyContact);
+                EmergencyContact emergencyContact = new EmergencyContact();
+                copyProperties(completeUser.getEmergencyContact(), emergencyContact);
 
-            GuardianAddress guardianAddress = new GuardianAddress();
-            GuardianInformation guardianInformation = new GuardianInformation();
-            copyProperties(completeUser.getGuardianInformation().getGuardianAddress(),guardianAddress);
-            copyProperties(completeUser.getGuardianInformation(), guardianInformation);
-            guardianInformation.setGuardianAddress(guardianAddress);
+                GuardianAddress guardianAddress = new GuardianAddress();
+                GuardianInformation guardianInformation = new GuardianInformation();
+                copyProperties(completeUser.getGuardianInformation().getGuardianAddress(), guardianAddress);
+                copyProperties(completeUser.getGuardianInformation(), guardianInformation);
+                guardianInformation.setGuardianAddress(guardianAddress);
 
-            MedicalInformation medicalInformation = new MedicalInformation();
-            copyProperties(completeUser.getMedicalInformation(), medicalInformation);
+                MedicalInformation medicalInformation = new MedicalInformation();
+                copyProperties(completeUser.getMedicalInformation(), medicalInformation);
 
-            MedicalEmergencyContact medicalEmergencyContact = new MedicalEmergencyContact();
-            copyProperties(completeUser.getMedicalEmergencyContact(), medicalEmergencyContact);
+                MedicalEmergencyContact medicalEmergencyContact = new MedicalEmergencyContact();
+                copyProperties(completeUser.getMedicalEmergencyContact(), medicalEmergencyContact);
 
 
-            completeUserDto.setUserId(completeUser.getUserId());
-            completeUserDto.setFullName(completeUser.getFullName());
-            completeUserDto.setEmail(completeUser.getEmail());
-            completeUserDto.setDob(completeUser.getDob());
-            completeUserDto.setGender(completeUser.getGender());
-            completeUserDto.setHeight(completeUser.getHeight());
-            completeUserDto.setWeight(completeUser.getWeight());
-            completeUserDto.setUserContactNumber(completeUser.getUserContactNumber());
-            completeUserDto.setUserNationality(completeUser.getUserNationality());
-            completeUserDto.setAcademicInterests(completeUser.getAcademicInterests());
-            completeUserDto.setExtracurricular(extracurricular);
-            completeUserDto.setEmergencyContact(emergencyContact);
-            completeUserDto.setGuardianInformation(guardianInformation);
-            completeUserDto.setMedicalInformation(medicalInformation);
-            completeUserDto.setMedicalEmergencyContact(medicalEmergencyContact);
+                completeUserDto.setUserId(completeUser.getUserId());
+                completeUserDto.setFullName(completeUser.getFullName());
+                completeUserDto.setEmail(completeUser.getEmail());
+                completeUserDto.setDob(completeUser.getDob());
+                completeUserDto.setGender(completeUser.getGender());
+                completeUserDto.setHeight(completeUser.getHeight());
+                completeUserDto.setWeight(completeUser.getWeight());
+                completeUserDto.setUserContactNumber(completeUser.getUserContactNumber());
+                completeUserDto.setUserNationality(completeUser.getUserNationality());
+                completeUserDto.setAcademicInterests(completeUser.getAcademicInterests());
+                completeUserDto.setExtracurricular(extracurricular);
+                completeUserDto.setEmergencyContact(emergencyContact);
+                completeUserDto.setGuardianInformation(guardianInformation);
+                completeUserDto.setMedicalInformation(medicalInformation);
+                completeUserDto.setMedicalEmergencyContact(medicalEmergencyContact);
 
-            return completeUserDto;
-        } else {
-            throw new UserIdNotFoundException("Invalid Id");
+                return completeUserDto;
+            }else {
+                throw new UserIdNotFoundException("Id is Invalid");
+            }
+        } catch (Exception e) {
+            throw new UserIdNotFoundException(e.getMessage());
         }
     }
 
-
     @Override
     public boolean deleteUserById(Integer userId) {
+        if(completeUserRepository.findById(userId).isPresent()){
+            completeUserRepository.deleteById(userId);
+            return true;
+        }
         return false;
     }
 
     @Override
     public String updateUserInfo(Integer userId, CompleteUserDto completeUserDto) {
-        return null;
+        Optional<CompleteUserEntity> optionalUser = completeUserRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            CompleteUserEntity userEntity = optionalUser.get();
+
+            // Update the basic user information
+            userEntity.setFullName(completeUserDto.getFullName());
+            userEntity.setEmail(completeUserDto.getEmail());
+            userEntity.setDob(completeUserDto.getDob());
+            userEntity.setGender(completeUserDto.getGender());
+            userEntity.setHeight(completeUserDto.getHeight());
+            userEntity.setWeight(completeUserDto.getWeight());
+            userEntity.setUserContactNumber(completeUserDto.getUserContactNumber());
+            userEntity.setUserNationality(completeUserDto.getUserNationality());
+            userEntity.setAcademicInterests(completeUserDto.getAcademicInterests());
+
+            // Update the associated entities
+            UserAddressEntity userAddress = userEntity.getUserAddress();
+            userAddress.setStreet(completeUserDto.getUserAddress().getStreet());
+            userAddress.setCity(completeUserDto.getUserAddress().getCity());
+            userAddress.setPostalCode(completeUserDto.getUserAddress().getPostalCode());
+
+            ExtracurricularEntity extracurricular = userEntity.getExtracurricular();
+            extracurricular.setActivity(completeUserDto.getExtracurricular().getActivity());
+            extracurricular.setLevel(completeUserDto.getExtracurricular().getLevel());
+
+            EmergencyContactEntity emergencyContact = userEntity.getEmergencyContact();
+            emergencyContact.setName(completeUserDto.getEmergencyContact().getName());
+            emergencyContact.setPhoneNumber(completeUserDto.getEmergencyContact().getPhoneNumber());
+
+            GuardianInformationEntity guardianInformation = userEntity.getGuardianInformation();
+            guardianInformation.setName(completeUserDto.getGuardianInformation().getName());
+            guardianInformation.setPhoneNumber(completeUserDto.getGuardianInformation().getPhoneNumber());
+
+            MedicalInformationEntity medicalInformation = userEntity.getMedicalInformation();
+            medicalInformation.setBloodType(completeUserDto.getMedicalInformation().getBloodType());
+            medicalInformation.setAllergies(completeUserDto.getMedicalInformation().getAllergies());
+
+            MedicalEmergencyContactEntity medicalEmergencyContact = userEntity.getMedicalEmergencyContact();
+            medicalEmergencyContact.setName(completeUserDto.getMedicalEmergencyContact().getName());
+            medicalEmergencyContact.setPhoneNumber(completeUserDto.getMedicalEmergencyContact().getPhoneNumber());
+
+            // Save the updated user entity
+            completeUserRepository.save(userEntity);
+
+            return "User information updated successfully.";
+        }
+
+        return "User not found.";
     }
+
 
     @Override
     public List<CompleteUserDto> getAllUser() {
