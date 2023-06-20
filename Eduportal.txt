@@ -1,0 +1,58 @@
+{
+  "userId": "CSE1002",
+  "fullName": "Mohacel Hosen",
+  "email": "mohacel.hosen",
+  "dob": "2000-05-11",
+  "gender": "Male",
+  "height": 165,
+  "weight": 50,
+  "userContactNumber": "01946363345",
+  "userNationality": "Bangladeshi",
+  "academicInterests": "IoT",
+  "userAddress": {
+    "streetAddress": "sector-#@#",
+    "city": "Uttara",
+    "postalCode": "1230",
+    "country": "Bangladesh",
+    "state": "Dhaka"
+  },
+  "extracurricular": {
+    "sports": "programming, gamming",
+    "club": "mcu",
+    "otherActivities": "football"
+  },
+  "emergencyContact": {
+    "fullName": "Mozammel",
+    "relationship": "Brother",
+    "contactNumber": "0168-xx-xxxx"
+  },
+  "guardianInformation": {
+    "guardianFullName": "string",
+    "relationshipToStudent": "string",
+    "guardianEmailAddress": "string",
+    "guardianContact": "01936-xx-xxxx",
+    "guardianAddress": {
+      "streetAddress": "sector-##",
+      "city": "Uttara",
+      "postalCode": "1230",
+      "country": "Bangladesh",
+      "state": "Dhaka"
+    },
+    "authorizedPickup": "self"
+  },
+  "medicalInformation": {
+    "bloodGroup": "B+",
+    "asthma": false,
+    "diabetes": false,
+    "epilepsy": "false",
+    "allergies": "spicy food, hot weather",
+    "heartConditions": "okey",
+    "previousSurgeries": "10 years ago hand are broken"
+  },
+  "medicalEmergencyContact": {
+    "fullName": "Dr. xyz",
+    "relationship": "Doctor",
+    "contactNumber": "019-xxx-xx-xxx",
+    "hospitalName": "Hitman Hospital"
+  }
+}
