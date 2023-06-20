@@ -115,13 +115,13 @@ public class UserServiceImpl implements IUserService{
 
             }
 
-            userAddressRepository.save(userAddress);
-            guardianAddressRepository.save(guardianAddress);
-            guardianInformationRepository.save(guardianInformation);
-            emergencyContactRepository.save(emergencyContact);
-            extraCurricularRepository.save(extracurricular);
-            medicalInformationRepository.save(medicalInformation);
-            medicalEmergencyContactRepository.save(medicalEmergencyContact);
+//            userAddressRepository.save(userAddress);
+//            guardianAddressRepository.save(guardianAddress);
+//            guardianInformationRepository.save(guardianInformation);
+//            emergencyContactRepository.save(emergencyContact);
+//            extraCurricularRepository.save(extracurricular);
+//            medicalInformationRepository.save(medicalInformation);
+//            medicalEmergencyContactRepository.save(medicalEmergencyContact);
             Integer id = completeUserRepository.save(completeUser).getId();
 
 
