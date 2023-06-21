@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class UserRestController {
     @Autowired
@@ -50,5 +52,12 @@ public class UserRestController {
         String updateMessage = userService.updateUserInfo(userId, completeUserDto);
         return  new ResponseEntity<>(updateMessage, HttpStatus.OK);
     }
+
+    @GetMapping("/allUser")
+    public  ResponseEntity<List<CompleteUserDto>> getAllUser(){
+        List<CompleteUserDto> allUser = userService.getAllUser();
+        return  new ResponseEntity<>(allUser, HttpStatus.OK);
+    }
+
 
 }

@@ -10,39 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 @Service
 public class UserServiceImpl implements IUserService{
-
     private final CompleteUserRepository completeUserRepository;
-    private final EmergencyContactRepository emergencyContactRepository;
-    private final ExtraCurricularRepository extraCurricularRepository;
-    private final GuardianAddressRepository guardianAddressRepository;
-    private final GuardianInformationRepository guardianInformationRepository;
-    private final MedicalInformationRepository medicalInformationRepository;
-    private final MedicalEmergencyContactRepository medicalEmergencyContactRepository;
-    private final UserAddressRepository userAddressRepository;
 
     @Autowired
-    public UserServiceImpl(CompleteUserRepository completeUserRepository,
-                           EmergencyContactRepository emergencyContactRepository,
-                           ExtraCurricularRepository extraCurricularRepository,
-                           GuardianAddressRepository guardianAddressRepository,
-                           GuardianInformationRepository guardianInformationRepository,
-                           MedicalInformationRepository medicalInformationRepository,
-                           MedicalEmergencyContactRepository medicalEmergencyContactRepository,
-                           UserAddressRepository userAddressRepository) {
+    public UserServiceImpl(CompleteUserRepository completeUserRepository) {
         this.completeUserRepository = completeUserRepository;
-        this.emergencyContactRepository = emergencyContactRepository;
-        this.extraCurricularRepository = extraCurricularRepository;
-        this.guardianAddressRepository = guardianAddressRepository;
-        this.guardianInformationRepository = guardianInformationRepository;
-        this.medicalInformationRepository = medicalInformationRepository;
-        this.medicalEmergencyContactRepository = medicalEmergencyContactRepository;
-        this.userAddressRepository = userAddressRepository;
     }
 
     @Override
@@ -115,13 +94,6 @@ public class UserServiceImpl implements IUserService{
 
             }
 
-//            userAddressRepository.save(userAddress);
-//            guardianAddressRepository.save(guardianAddress);
-//            guardianInformationRepository.save(guardianInformation);
-//            emergencyContactRepository.save(emergencyContact);
-//            extraCurricularRepository.save(extracurricular);
-//            medicalInformationRepository.save(medicalInformation);
-//            medicalEmergencyContactRepository.save(medicalEmergencyContact);
             Integer id = completeUserRepository.save(completeUser).getId();
 
 
@@ -161,55 +133,29 @@ public class UserServiceImpl implements IUserService{
         try {
             if (completeUserInfoById.isPresent()) {
                 CompleteUserEntity completeUser = completeUserInfoById.get();
-                CompleteUserDto completeUserDto = new CompleteUserDto();
-
-                UserAddress userAddress = new UserAddress();
-                copyProperties(completeUser.getUserAddress(), userAddress);
-
-                Extracurricular extracurricular = new Extracurricular();
-                copyProperties(completeUser.getExtracurricular(), extracurricular);
-
-                EmergencyContact emergencyContact = new EmergencyContact();
-                copyProperties(completeUser.getEmergencyContact(), emergencyContact);
-
-                GuardianAddress guardianAddress = new GuardianAddress();
-                GuardianInformation guardianInformation = new GuardianInformation();
-                copyProperties(completeUser.getGuardianInformation().getGuardianAddress(), guardianAddress);
-                copyProperties(completeUser.getGuardianInformation(), guardianInformation);
-                guardianInformation.setGuardianAddress(guardianAddress);
-
-                MedicalInformation medicalInformation = new MedicalInformation();
-                copyProperties(completeUser.getMedicalInformation(), medicalInformation);
-
-                MedicalEmergencyContact medicalEmergencyContact = new MedicalEmergencyContact();
-                copyProperties(completeUser.getMedicalEmergencyContact(), medicalEmergencyContact);
-
-
-                completeUserDto.setUserId(completeUser.getUserId());
-                completeUserDto.setFullName(completeUser.getFullName());
-                completeUserDto.setEmail(completeUser.getEmail());
-                completeUserDto.setDob(completeUser.getDob());
-                completeUserDto.setGender(completeUser.getGender());
-                completeUserDto.setHeight(completeUser.getHeight());
-                completeUserDto.setWeight(completeUser.getWeight());
-                completeUserDto.setUserContactNumber(completeUser.getUserContactNumber());
-                completeUserDto.setUserNationality(completeUser.getUserNationality());
-                completeUserDto.setAcademicInterests(completeUser.getAcademicInterests());
-                completeUserDto.setUserAddress(userAddress);
-                completeUserDto.setExtracurricular(extracurricular);
-                completeUserDto.setEmergencyContact(emergencyContact);
-                completeUserDto.setGuardianInformation(guardianInformation);
-                completeUserDto.setMedicalInformation(medicalInformation);
-                completeUserDto.setMedicalEmergencyContact(medicalEmergencyContact);
-
+                CompleteUserDto completeUserDto = mapCompleteUserEntityToDto(completeUser);
                 return completeUserDto;
-            }else {
+            } else {
                 throw new UserIdNotFoundException("Id is Invalid");
             }
         } catch (Exception e) {
             throw new UserIdNotFoundException(e.getMessage());
         }
     }
+
+    @Override
+    public List<CompleteUserDto> getAllUser() {
+        List<CompleteUserEntity> completeUserList = completeUserRepository.findAll();
+        List<CompleteUserDto> completeUserDtoList = new ArrayList<>();
+
+        for (CompleteUserEntity completeUser : completeUserList) {
+            CompleteUserDto completeUserDto = mapCompleteUserEntityToDto(completeUser);
+            completeUserDtoList.add(completeUserDto);
+        }
+
+        return completeUserDtoList;
+    }
+
 
     @Override
     public boolean deleteUserById(Integer userId) {
@@ -249,13 +195,6 @@ public class UserServiceImpl implements IUserService{
         return "User not found.";
     }
 
-
-    @Override
-    public List<CompleteUserDto> getAllUser() {
-        return null;
-    }
-
-
     // to generate random password
     private String generateRandomString(int length) {
         final String ALPHANUMERIC_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
@@ -274,4 +213,49 @@ public class UserServiceImpl implements IUserService{
     public static <S, T> void copyProperties(S source, T target) {
         BeanUtils.copyProperties(source, target);
     }
+
+    private CompleteUserDto mapCompleteUserEntityToDto(CompleteUserEntity completeUser) {
+        CompleteUserDto completeUserDto = new CompleteUserDto();
+
+        UserAddress userAddress = new UserAddress();
+        copyProperties(completeUser.getUserAddress(), userAddress);
+
+        Extracurricular extracurricular = new Extracurricular();
+        copyProperties(completeUser.getExtracurricular(), extracurricular);
+
+        EmergencyContact emergencyContact = new EmergencyContact();
+        copyProperties(completeUser.getEmergencyContact(), emergencyContact);
+
+        GuardianAddress guardianAddress = new GuardianAddress();
+        GuardianInformation guardianInformation = new GuardianInformation();
+        copyProperties(completeUser.getGuardianInformation().getGuardianAddress(), guardianAddress);
+        copyProperties(completeUser.getGuardianInformation(), guardianInformation);
+        guardianInformation.setGuardianAddress(guardianAddress);
+
+        MedicalInformation medicalInformation = new MedicalInformation();
+        copyProperties(completeUser.getMedicalInformation(), medicalInformation);
+
+        MedicalEmergencyContact medicalEmergencyContact = new MedicalEmergencyContact();
+        copyProperties(completeUser.getMedicalEmergencyContact(), medicalEmergencyContact);
+
+        completeUserDto.setUserId(completeUser.getUserId());
+        completeUserDto.setFullName(completeUser.getFullName());
+        completeUserDto.setEmail(completeUser.getEmail());
+        completeUserDto.setDob(completeUser.getDob());
+        completeUserDto.setGender(completeUser.getGender());
+        completeUserDto.setHeight(completeUser.getHeight());
+        completeUserDto.setWeight(completeUser.getWeight());
+        completeUserDto.setUserContactNumber(completeUser.getUserContactNumber());
+        completeUserDto.setUserNationality(completeUser.getUserNationality());
+        completeUserDto.setAcademicInterests(completeUser.getAcademicInterests());
+        completeUserDto.setUserAddress(userAddress);
+        completeUserDto.setExtracurricular(extracurricular);
+        completeUserDto.setEmergencyContact(emergencyContact);
+        completeUserDto.setGuardianInformation(guardianInformation);
+        completeUserDto.setMedicalInformation(medicalInformation);
+        completeUserDto.setMedicalEmergencyContact(medicalEmergencyContact);
+
+        return completeUserDto;
+    }
+
 }
