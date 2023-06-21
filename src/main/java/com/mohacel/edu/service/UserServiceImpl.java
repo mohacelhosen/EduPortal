@@ -195,6 +195,7 @@ public class UserServiceImpl implements IUserService{
                 completeUserDto.setUserContactNumber(completeUser.getUserContactNumber());
                 completeUserDto.setUserNationality(completeUser.getUserNationality());
                 completeUserDto.setAcademicInterests(completeUser.getAcademicInterests());
+                completeUserDto.setUserAddress(userAddress);
                 completeUserDto.setExtracurricular(extracurricular);
                 completeUserDto.setEmergencyContact(emergencyContact);
                 completeUserDto.setGuardianInformation(guardianInformation);
@@ -224,44 +225,47 @@ public class UserServiceImpl implements IUserService{
         Optional<CompleteUserEntity> optionalUser = completeUserRepository.findById(userId);
         if (optionalUser.isPresent()) {
             CompleteUserEntity userEntity = optionalUser.get();
+            System.out.println(userEntity);
 
             // Update the basic user information
-            userEntity.setFullName(completeUserDto.getFullName());
-            userEntity.setEmail(completeUserDto.getEmail());
-            userEntity.setDob(completeUserDto.getDob());
-            userEntity.setGender(completeUserDto.getGender());
-            userEntity.setHeight(completeUserDto.getHeight());
-            userEntity.setWeight(completeUserDto.getWeight());
-            userEntity.setUserContactNumber(completeUserDto.getUserContactNumber());
-            userEntity.setUserNationality(completeUserDto.getUserNationality());
-            userEntity.setAcademicInterests(completeUserDto.getAcademicInterests());
+            BeanUtils.copyProperties(completeUserDto, userEntity);
 
             // Update the associated entities
-            UserAddressEntity userAddress = userEntity.getUserAddress();
-            userAddress.setStreet(completeUserDto.getUserAddress().getStreet());
-            userAddress.setCity(completeUserDto.getUserAddress().getCity());
-            userAddress.setPostalCode(completeUserDto.getUserAddress().getPostalCode());
+            UserAddress userAddress = completeUserDto.getUserAddress();
+            UserAddressEntity userAddressEntity  = new UserAddressEntity();
+            copyProperties(userAddress, userAddressEntity);
+            userEntity.setUserAddress(userAddressEntity);
 
-            ExtracurricularEntity extracurricular = userEntity.getExtracurricular();
-            extracurricular.setActivity(completeUserDto.getExtracurricular().getActivity());
-            extracurricular.setLevel(completeUserDto.getExtracurricular().getLevel());
 
-            EmergencyContactEntity emergencyContact = userEntity.getEmergencyContact();
-            emergencyContact.setName(completeUserDto.getEmergencyContact().getName());
-            emergencyContact.setPhoneNumber(completeUserDto.getEmergencyContact().getPhoneNumber());
+            ExtracurricularEntity extracurricularEntity = new ExtracurricularEntity();
+            Extracurricular extracurricular = completeUserDto.getExtracurricular();
+            copyProperties(extracurricular, extracurricularEntity);
+            userEntity.setExtracurricular(extracurricularEntity);
 
-            GuardianInformationEntity guardianInformation = userEntity.getGuardianInformation();
-            guardianInformation.setName(completeUserDto.getGuardianInformation().getName());
-            guardianInformation.setPhoneNumber(completeUserDto.getGuardianInformation().getPhoneNumber());
+            EmergencyContactEntity emergencyContactEntity = new EmergencyContactEntity();
+            EmergencyContact emergencyContact = completeUserDto.getEmergencyContact();
+            copyProperties(emergencyContact,emergencyContactEntity);
+            userEntity.setEmergencyContact(emergencyContactEntity);
 
-            MedicalInformationEntity medicalInformation = userEntity.getMedicalInformation();
-            medicalInformation.setBloodType(completeUserDto.getMedicalInformation().getBloodType());
-            medicalInformation.setAllergies(completeUserDto.getMedicalInformation().getAllergies());
 
-            MedicalEmergencyContactEntity medicalEmergencyContact = userEntity.getMedicalEmergencyContact();
-            medicalEmergencyContact.setName(completeUserDto.getMedicalEmergencyContact().getName());
-            medicalEmergencyContact.setPhoneNumber(completeUserDto.getMedicalEmergencyContact().getPhoneNumber());
+            GuardianInformationEntity guardianInformationEntity = new GuardianInformationEntity();
+            GuardianInformation guardianInformation = completeUserDto.getGuardianInformation();
+            copyProperties(guardianInformation, guardianInformationEntity);
+            userEntity.setGuardianInformation(guardianInformationEntity);
 
+
+            MedicalInformationEntity medicalInformationEntity = new MedicalInformationEntity();
+            MedicalInformation medicalInformation = completeUserDto.getMedicalInformation();
+            copyProperties(medicalInformation, medicalInformationEntity);
+            userEntity.setMedicalInformation(medicalInformationEntity);
+
+
+            MedicalEmergencyContactEntity medicalEmergencyContactEntity = new MedicalEmergencyContactEntity();
+            MedicalEmergencyContact medicalEmergencyContact = completeUserDto.getMedicalEmergencyContact();
+            copyProperties(medicalEmergencyContact, medicalEmergencyContactEntity);
+            userEntity.setMedicalEmergencyContact(medicalEmergencyContactEntity);
+
+            System.out.println(userEntity);
             // Save the updated user entity
             completeUserRepository.save(userEntity);
 
