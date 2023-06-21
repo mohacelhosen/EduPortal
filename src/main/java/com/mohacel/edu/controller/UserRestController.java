@@ -33,4 +33,22 @@ public class UserRestController {
         CompleteUserDto userById = userService.findUserById(userId);
         return new ResponseEntity<>(userById, HttpStatus.OK);
     }
+
+    @DeleteMapping("/user/{userId}")
+    public  ResponseEntity<String> deleteUserById(@PathVariable Integer userId){
+        boolean isUserDelete = userService.deleteUserById(userId);
+        String msg = "Delete Fail";
+        if (isUserDelete !=false){
+            msg = "Delete Successful";
+        }
+
+        return  new ResponseEntity<>(msg, HttpStatus.OK);
+    }
+
+    @PutMapping("/user/{userId}")
+    public ResponseEntity<String> updateUserInfo(@PathVariable Integer userId,@RequestBody CompleteUserDto completeUserDto){
+        String updateMessage = userService.updateUserInfo(userId, completeUserDto);
+        return  new ResponseEntity<>(updateMessage, HttpStatus.OK);
+    }
+
 }

@@ -231,39 +231,13 @@ public class UserServiceImpl implements IUserService{
             BeanUtils.copyProperties(completeUserDto, userEntity);
 
             // Update the associated entities
-            UserAddress userAddress = completeUserDto.getUserAddress();
-            UserAddressEntity userAddressEntity  = new UserAddressEntity();
-            copyProperties(userAddress, userAddressEntity);
-            userEntity.setUserAddress(userAddressEntity);
-
-
-            ExtracurricularEntity extracurricularEntity = new ExtracurricularEntity();
-            Extracurricular extracurricular = completeUserDto.getExtracurricular();
-            copyProperties(extracurricular, extracurricularEntity);
-            userEntity.setExtracurricular(extracurricularEntity);
-
-            EmergencyContactEntity emergencyContactEntity = new EmergencyContactEntity();
-            EmergencyContact emergencyContact = completeUserDto.getEmergencyContact();
-            copyProperties(emergencyContact,emergencyContactEntity);
-            userEntity.setEmergencyContact(emergencyContactEntity);
-
-
-            GuardianInformationEntity guardianInformationEntity = new GuardianInformationEntity();
-            GuardianInformation guardianInformation = completeUserDto.getGuardianInformation();
-            copyProperties(guardianInformation, guardianInformationEntity);
-            userEntity.setGuardianInformation(guardianInformationEntity);
-
-
-            MedicalInformationEntity medicalInformationEntity = new MedicalInformationEntity();
-            MedicalInformation medicalInformation = completeUserDto.getMedicalInformation();
-            copyProperties(medicalInformation, medicalInformationEntity);
-            userEntity.setMedicalInformation(medicalInformationEntity);
-
-
-            MedicalEmergencyContactEntity medicalEmergencyContactEntity = new MedicalEmergencyContactEntity();
-            MedicalEmergencyContact medicalEmergencyContact = completeUserDto.getMedicalEmergencyContact();
-            copyProperties(medicalEmergencyContact, medicalEmergencyContactEntity);
-            userEntity.setMedicalEmergencyContact(medicalEmergencyContactEntity);
+            copyProperties(completeUserDto.getUserAddress(), userEntity.getUserAddress());
+            copyProperties(completeUserDto.getExtracurricular(), userEntity.getExtracurricular());
+            copyProperties(completeUserDto.getEmergencyContact(), userEntity.getEmergencyContact());
+            copyProperties(completeUserDto.getGuardianInformation().getGuardianAddress(), userEntity.getGuardianInformation().getGuardianAddress());
+            copyProperties(completeUserDto.getGuardianInformation(), userEntity.getGuardianInformation());
+            copyProperties(completeUserDto.getMedicalInformation(), userEntity.getMedicalInformation());
+            copyProperties(completeUserDto.getMedicalEmergencyContact(), userEntity.getMedicalEmergencyContact());
 
             System.out.println(userEntity);
             // Save the updated user entity
